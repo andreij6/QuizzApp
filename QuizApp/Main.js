@@ -147,16 +147,18 @@ var showQuestions = function () {
     //Get Questions
     var quizQuestion = quiz.questions[count].question;
     var quizAnswers = quiz.questions[count].choices;
+    var idCount = 0;
     
     //find h2 element and display on page
     question.html('<h2>' + quizQuestion + '</h2>');
 
     //Display answers on the page
     for (var i = 0; i < quizAnswers.length; i++) {
-        choices.append('<li>' + quizAnswers[i].Option + '</li>')
+        idCount += 1;
+        choices.append('<li id="'+ idCount + '" onclick="rightOrWrong(' + quizAnswers[i].Answer + ',' + idCount + ');" class="well">' + quizAnswers[i].Option + '</li>')
     }
     
-    quiz.questions[count]["status"] = "Taken";
+    quiz["questions"][count]["status"] = "Taken";
 
     count += 1;
 }
@@ -170,17 +172,20 @@ var startQuiz = function () {
 };
 
 var nextQuestion = function () {
-    var availableQuestions = [];
+    var remainingQuestions = [];
     var quizQuestion;
-    //change 
+    var idCount = 0;
+
+    //Find all the questions that are not taken and put them into an array
     for (var i = 0; i < quiz["questions"].length; i++) {
         if (quiz.questions[i].status !== "Taken") {
-            availableQuestions.push(quiz.questions[i]);
+            remainingQuestions.push(quiz.questions[i]);
         }
     }
 
-    if (availableQuestions.length > 0) {
-        quizQuestion = availableQuestions[0].question;
+    //If the there are any remaining questions pick the first one else Finish
+    if (remainingQuestions.length > 0) {
+        quizQuestion = remainingQuestions[0].question;
     } else {
         alert("Your Score");
         console.log("done");
@@ -189,14 +194,23 @@ var nextQuestion = function () {
     question.html('<h2>' + quizQuestion + '</h2>');
     choices.html(" ");
 
-    for (var i = 0; i < availableQuestions[0]["choices"].length; i++) {
-        
-        choices.append('<li>' + availableQuestions[0]["choices"][i]["Option"] + '</li>')
+    //loop through the choices for the given question and put them on the page.
+    for (var i = 0; i < remainingQuestions[0]["choices"].length; i++) {
+        idCount += 1;
+        choices.append('<li id ="'+ idCount +'" onclick="rightOrWrong(' + remainingQuestions[0]["choices"][i]["Answer"] + ',' + idCount + ');" class="well">' + remainingQuestions[0]["choices"][i]["Option"] + '</li>')
     }
 
     quiz.questions[count]["status"] = "Taken";
 
     count += 1;
+};
+
+var rightOrWrong = function (boolean, choiceID) {
+    if (boolean) {
+        document.getElementById(choiceID).setAttribute("class", "well correct");
+    } else {
+        document.getElementById(choiceID).setAttribute("class", "well wrong");
+    }
 };
 
 //do something

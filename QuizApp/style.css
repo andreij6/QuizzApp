@@ -1,3 +1,21 @@
 ﻿.hidden {
     display: none;
 }
+
+.correct {
+    background: #4ee13d;
+}
+
+.wrong {
+    background: #ff0000;
+}
+
+#container {
+    width: 600px;
+    height: 600px;
+    background-color: #F0F8FF;
+    border: 2px solid black;
+    padding: 10px 10px 10px 20px;
+    margin: 25px auto;
+
+}
