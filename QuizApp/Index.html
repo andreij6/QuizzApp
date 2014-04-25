@@ -7,27 +7,30 @@
     <link href="style.css" rel="stylesheet" />
 
 </head>
-<body id="container">
-    
-    <h1>Quizzes</h1>
-    
-    <button id="start" type="button" class="btn btn-primary">Start Quiz</button>
+<body>
 
-    <div id="question" class="hidden">question1</div>
+    <section id="container">
 
-    <ol id="choices" class="hidden">
+        <h1>Quizzes</h1>
+
+        <button id="start" type="button" class="btn btn-primary">Start Quiz</button>
+
+        <div id="question" class="hidden">question1</div>
+
+        <ol id="choices" class="hidden"></ol>
+
+        <button id="next" type="button" class="hidden btn btn-primary">Next</button>
+        <p hidden>\\Points//</p>
+
+        <button id="fifty" type="button" class="hidden btn btn-success">50 / 50</button>
         
-    </ol>
+        <progress id="progress" max="5" class="hidden"></progress>
+        <button id="cheat" type="button" class="hidden btn btn-warning">Cheat Button</button>
 
-    <button id="next" type="button" class="hidden btn btn-primary">Next</button>
-    <p hidden>\\Points//</p>
+    </section>
 
-    <progress id="progress" max="5" class="hidden"></progress>
-    
     <script src="Scripts/jquery-1.9.0.min.js"></script>
     <script src="Scripts/bootstrap.min.js"></script>
     <script src="Main.js"></script>
-
-
 </body>
 </html>

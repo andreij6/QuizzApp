@@ -64,7 +64,7 @@ var quiz = {
                  },
                  {
                      Option: "display: inline",
-                     Answer: true
+                     Answer: false
                  }
              ],
              status: "Not Taken",
@@ -142,14 +142,18 @@ var button = $("#start");
 var question = $("#question");
 var choices = $("#choices");
 var nextBtn = $("#next");
+var fiftyButton = $("#fifty");
+var cheatButton = $("#cheat");
 var count = 0;
 var progressBar = $("#progress");
 var Points = 0;
 
 var showQuestions = function () {
     //Get Questions
-    var quizQuestion = quiz.questions[count].question;
-    var quizAnswers = quiz.questions[count].choices;
+    var random = Math.floor(Math.random() * quiz.questions.length);
+
+    var quizQuestion = quiz.questions[random].question;
+    var quizAnswers = quiz.questions[random].choices;
     var idCount = 0;
 
     // Disable next button
@@ -161,7 +165,7 @@ var showQuestions = function () {
     //Display answers on the page
     for (var i = 0; i < quizAnswers.length; i++) {
         idCount += 1;
-        choices.append('<li id="' + idCount + '" onclick="rightOrWrong(' + quizAnswers[i].Answer + ',' + idCount + ');" class="well">' + quizAnswers[i].Option + '</li>')
+        choices.append('<li id="' + idCount + '" onclick="rightOrWrong(' + quizAnswers[i].Answer + ',' + idCount + ');" class="well" data-option=' + quizAnswers[i].Answer + '>' + quizAnswers[i].Option + '</li>')
     }
 
     quiz["questions"][count]["status"] = "Taken";
@@ -177,6 +181,9 @@ var startQuiz = function () {
     choices.removeClass("hidden");
     nextBtn.removeClass("hidden");
     progressBar.removeClass("hidden");
+    fiftyButton.removeClass("hidden");
+    cheatButton.removeClass("hidden");
+
     showQuestions();
 };
 
@@ -186,6 +193,7 @@ var nextQuestion = function () {
     var idCount = 0;
 
     nextBtn.attr("disabled", "disabled");
+    fiftyButton.removeAttr("disabled");
 
     //Find all the questions that are not taken and put them into an array
     for (var i = 0; i < quiz["questions"].length; i++) {
@@ -208,7 +216,7 @@ var nextQuestion = function () {
     //loop through the choices for the given question and put them on the page.
     for (var i = 0; i < remainingQuestions[0]["choices"].length; i++) {
         idCount += 1;
-        choices.append('<li id ="'+ idCount +'" onclick="rightOrWrong(' + remainingQuestions[0]["choices"][i]["Answer"] + ',' + idCount + ');" class="well">' + remainingQuestions[0]["choices"][i]["Option"] + '</li>')
+        choices.append('<li id ="' + idCount + '" onclick="rightOrWrong(' + remainingQuestions[0]["choices"][i]["Answer"] + ',' + idCount + ');" class="well" data-option=' + remainingQuestions[0]["choices"][i]["Answer"] + '>' + remainingQuestions[0]["choices"][i]["Option"] + '</li>')
     }
 
     quiz.questions[count]["status"] = "Taken";
@@ -227,7 +235,7 @@ var rightOrWrong = function (boolean, choiceID) {
         for (var i = 0; i < listItems.length; i++) {
             listItems[i].removeAttribute("onclick");
         }
-
+        fiftyButton.attr("disabled", "disabled");
         nextBtn.removeAttr("disabled", "enable");
         Points += 20;
         
@@ -238,12 +246,68 @@ var rightOrWrong = function (boolean, choiceID) {
         for (var i = 0; i < listItems.length; i++) {
             listItems[i].removeAttribute("onclick");
         }
-
+        fiftyButton.attr("disabled","disabled")
         nextBtn.removeAttr("disabled", "enable");
     }
 };
 
+var narrowChoices = function () {
+    listItems = document.getElementsByTagName("li");
+    var falseAnswers = []
+    var trueAnswer;
+    var option2;
+
+    for (var i = 0; i < listItems.length; i++) {
+        if (listItems[i].getAttribute("data-option") == "false") {
+            falseAnswers.push(listItems[i]);
+            listItems[i].setAttribute("class", "blacken well");
+            listItems[i].setAttribute("disabled", "disabled");
+        } else {
+            trueAnswer = listItems[i];
+            listItems[i].setAttribute("class", "blacken well");
+            listItems[i].setAttribute("disabled", "disabled");
+        }
+    }
+
+    option2 = falseAnswers[Math.floor(Math.random() * falseAnswers.length)];
+
+    trueAnswer.removeAttribute("disabled");
+    trueAnswer.setAttribute("class", "well");
+    option2.removeAttribute("disabled");
+    option2.setAttribute("class", "well");
+
+    console.log(falseAnswers);
+};
+
+//cheat button show answer
+var showAnswer = function () {
+    var listItems = document.getElementsByTagName("li");
+
+    for (var i = 0; i < listItems.length; i++) {
+        if (listItems[i].getAttribute("data-option") === "false") {
+            listItems[i].setAttribute("class", "well wrong");
+        } else {
+            listItems[i].setAttribute("class", "well correct");
+        }
+    }
+
+}
+
+//cheat button toggle 
+var toggleShowAnswer = function () {
+    var listItems = document.getElementsByTagName("li");
+
+    for (var i = 0; i < listItems.length; i++) {
+        listItems[i].setAttribute("class", "well");
+    }
+
+}
+
 //do something
 button.on("click", startQuiz);
+fiftyButton.on("click", narrowChoices);
 nextBtn.on("click", nextQuestion);
+
+cheatButton.mouseenter(showAnswer);
+cheatButton.mouseleave(toggleShowAnswer);
 

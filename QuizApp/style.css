@@ -20,3 +20,23 @@
     margin: 25px auto;
 
 }
+
+.blacken {
+    background-color: #605c5c;
+}
+
+li {
+    transition: background-color 0.6s ease;
+}
+
+li:hover {
+    background-color: #c1bbbb;
+}
+
+.wrong:hover {
+    background: #e10d0d;
+}
+
+.correct:hover {
+    background: #36942b;
+}
