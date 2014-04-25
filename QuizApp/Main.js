@@ -20,7 +20,7 @@
                     Answer: false
                 }
             ],
-            status: "notTaken",
+            status: "Not Taken",
             points: 20
         },
         {
@@ -43,7 +43,7 @@
                     Answer: true
                 }
             ],
-            status: "notTaken",
+            status: "Not Taken",
             points: 20
         },
          {
@@ -66,7 +66,7 @@
                      Answer: true
                  }
              ],
-             status: "notTaken",
+             status: "Not Taken",
              points: 20
          },
           {
@@ -89,7 +89,7 @@
                       Answer: false
                   }
               ],
-              status: "notTaken",
+              status: "Not Taken",
               points: 20
           },
            {
@@ -112,13 +112,28 @@
                        Answer: true
                    }
                ],
-               status: "notTaken",
+               status: "Not Taken",
                points: 20
            }
     ],
 
 }
 
+////TryOut Using constructor is a more compact but we will do the later during  refactor.
+
+//var qQuestion = function (questi, choics, status, points) {
+//    this.question = questi;
+//    this.choice = choics;
+//    this.status = status;
+//    this.points = points;
+//};
+
+
+//var QuestionOne = new qQuestion("string", [1, 2, 3]);
+//var QuestionTwo = new qQuestion();
+//var QuestionThree = new qQuestion();
+//var QuestionFour = new qQuestion();
+//var QuestionFive = new qQuestion();
 
 //find something
 
@@ -141,9 +156,7 @@ var showQuestions = function () {
         choices.append('<li>' + quizAnswers[i].Option + '</li>')
     }
     
-        quiz.questions[count].question.status = "Taken";
-    
-    
+    quiz.questions[count]["status"] = "Taken";
 
     count += 1;
 }
@@ -160,19 +173,28 @@ var nextQuestion = function () {
     var availableQuestions = [];
     var quizQuestion;
     //change 
-    for (var i = 0; i < quiz.questions.length; i++) {
+    for (var i = 0; i < quiz["questions"].length; i++) {
         if (quiz.questions[i].status !== "Taken") {
             availableQuestions.push(quiz.questions[i]);
         }
     }
 
-    if (count < 5) {
-        quizQuestion = availableQuestions[count].question;
+    if (availableQuestions.length > 0) {
+        quizQuestion = availableQuestions[0].question;
     } else {
         alert("Your Score");
+        console.log("done");
+        return "done";
     }
     question.html('<h2>' + quizQuestion + '</h2>');
+    choices.html(" ");
 
+    for (var i = 0; i < availableQuestions[0]["choices"].length; i++) {
+        
+        choices.append('<li>' + availableQuestions[0]["choices"][i]["Option"] + '</li>')
+    }
+
+    quiz.questions[count]["status"] = "Taken";
 
     count += 1;
 };
