@@ -8,6 +8,7 @@
 
 .wrong {
     background: #ff0000;
+    list-style-type:square;
 }
 
 #container {

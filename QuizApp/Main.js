@@ -1,4 +1,5 @@
-﻿var quiz = {
+﻿
+var quiz = {
     questions: [
         {
             question: "Which of the following is NOT a programming language",
@@ -101,7 +102,7 @@
                    },
                    {
                        Option: "alert(calcInterest());",
-                       Answer: false
+                       Answer: true
                    },
                    {
                        Option: "console.log(calcInterest)",
@@ -109,7 +110,7 @@
                    },
                    {
                        Option: "document.write(calcInterest)",
-                       Answer: true
+                       Answer: false
                    }
                ],
                status: "Not Taken",
@@ -142,25 +143,32 @@ var question = $("#question");
 var choices = $("#choices");
 var nextBtn = $("#next");
 var count = 0;
+var progressBar = $("#progress");
+var Points = 0;
 
 var showQuestions = function () {
     //Get Questions
     var quizQuestion = quiz.questions[count].question;
     var quizAnswers = quiz.questions[count].choices;
     var idCount = 0;
-    
+
+    // Disable next button
+    nextBtn.attr("disabled","disabled");
+
     //find h2 element and display on page
     question.html('<h2>' + quizQuestion + '</h2>');
 
     //Display answers on the page
     for (var i = 0; i < quizAnswers.length; i++) {
         idCount += 1;
-        choices.append('<li id="'+ idCount + '" onclick="rightOrWrong(' + quizAnswers[i].Answer + ',' + idCount + ');" class="well">' + quizAnswers[i].Option + '</li>')
+        choices.append('<li id="' + idCount + '" onclick="rightOrWrong(' + quizAnswers[i].Answer + ',' + idCount + ');" class="well">' + quizAnswers[i].Option + '</li>')
     }
-    
+
     quiz["questions"][count]["status"] = "Taken";
 
+    //Set Progress bar
     count += 1;
+    progressBar.attr("value", count);
 }
 
 var startQuiz = function () {
@@ -168,6 +176,7 @@ var startQuiz = function () {
     question.removeClass("hidden");
     choices.removeClass("hidden");
     nextBtn.removeClass("hidden");
+    progressBar.removeClass("hidden");
     showQuestions();
 };
 
@@ -175,6 +184,8 @@ var nextQuestion = function () {
     var remainingQuestions = [];
     var quizQuestion;
     var idCount = 0;
+
+    nextBtn.attr("disabled", "disabled");
 
     //Find all the questions that are not taken and put them into an array
     for (var i = 0; i < quiz["questions"].length; i++) {
@@ -187,7 +198,7 @@ var nextQuestion = function () {
     if (remainingQuestions.length > 0) {
         quizQuestion = remainingQuestions[0].question;
     } else {
-        alert("Your Score");
+        alert("Your Score " + Points + "%");
         console.log("done");
         return "done";
     }
@@ -203,16 +214,36 @@ var nextQuestion = function () {
     quiz.questions[count]["status"] = "Taken";
 
     count += 1;
+    progressBar.attr("value", count);
 };
 
 var rightOrWrong = function (boolean, choiceID) {
+    listItems = document.getElementsByTagName("li");
+
     if (boolean) {
         document.getElementById(choiceID).setAttribute("class", "well correct");
+
+        //give the tester thier points
+        for (var i = 0; i < listItems.length; i++) {
+            listItems[i].removeAttribute("onclick");
+        }
+
+        nextBtn.removeAttr("disabled", "enable");
+        Points += 20;
+        
     } else {
         document.getElementById(choiceID).setAttribute("class", "well wrong");
+        //0 points
+
+        for (var i = 0; i < listItems.length; i++) {
+            listItems[i].removeAttribute("onclick");
+        }
+
+        nextBtn.removeAttr("disabled", "enable");
     }
 };
 
 //do something
 button.on("click", startQuiz);
 nextBtn.on("click", nextQuestion);
+
